@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 public class TicTacToe {
     static final int N = 3;
     public int mat[][] = new int[N][N];
@@ -19,8 +21,10 @@ public class TicTacToe {
             JOptionPane.showMessageDialog(null, "X wins!");
 
             final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
+            LocalDateTime now = LocalDateTime.now();
             writer.newLine();
-            writer.write("X wins!");
+            writer.write("X wins! at "+ dtf.format(now));
             writer.newLine();
             writer.close();
 
@@ -29,8 +33,10 @@ public class TicTacToe {
 
             JOptionPane.showMessageDialog(null, "O wins!");
             final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
+            LocalDateTime now = LocalDateTime.now();
             writer.newLine();
-            writer.write("O wins!");
+            writer.write("O wins! at "+dtf.format(now));
             writer.newLine();
             writer.close();
         }
@@ -39,11 +45,12 @@ public class TicTacToe {
 
     void draw() throws IOException {
         new JFrame();
-
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
+        LocalDateTime now = LocalDateTime.now();
         JOptionPane.showMessageDialog(null, "Match draw !");
         final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
         writer.newLine();
-        writer.write("Match draw !");
+        writer.write("Match draw! at "+dtf.format(now));
         writer.newLine();
         writer.close();
 
@@ -199,9 +206,19 @@ public class TicTacToe {
                 System.out.print("\n");
         }
     }
-    public Boolean AddMove(int x,int y,int value) {
+    public Boolean AddMove(int x,int y,int value) throws Exception{
         if(mat[x-1][y-1] != -1 || x < 0 || y < 0 || x > N || y > N)
             return false;
+        final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
+        LocalDateTime now = LocalDateTime.now();
+        writer.newLine();
+        if(value == 1)
+            writer.write("X moves "+x+","+y+" at "+dtf.format(now));
+        if(value == 0)
+            writer.write("O moves "+x+","+y+" at "+dtf.format(now));
+        writer.newLine();
+        writer.close();
         mat[x-1][y-1] = value;
         return true;
     }
