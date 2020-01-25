@@ -4,7 +4,7 @@ import java.util.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 public class TicTacToe {
-    static final int N = 3;
+    public static final int N = 3;
     public int mat[][] = new int[N][N];
     TicTacToe(){
         for (int i = 0; i < N; i++) {
@@ -18,25 +18,25 @@ public class TicTacToe {
 
         if (a == 1) {
 
-            JOptionPane.showMessageDialog(null, "X wins!");
+            JOptionPane.showMessageDialog(null, "Player1 wins!");
 
             final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
             LocalDateTime now = LocalDateTime.now();
             writer.newLine();
-            writer.write("X wins! at "+ dtf.format(now));
+            writer.write("Player1 wins! at "+ dtf.format(now));
             writer.newLine();
             writer.close();
 
             return;
         } else {
 
-            JOptionPane.showMessageDialog(null, "O wins!");
+            JOptionPane.showMessageDialog(null, "Player2 wins!");
             final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
             LocalDateTime now = LocalDateTime.now();
             writer.newLine();
-            writer.write("O wins! at "+dtf.format(now));
+            writer.write("Player2 wins! at "+dtf.format(now));
             writer.newLine();
             writer.close();
         }
@@ -55,135 +55,70 @@ public class TicTacToe {
         writer.close();
 
     }
+    
     public Boolean checkDraw(int count) {
-        int cnt = 0;
-        if(count == 5 || count > 6){
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    if(mat[i][j] == -1) {
-                        mat[i][j] = 1;
-                        if(checkX()) {
-                            cnt++;
-                        }
-                        mat[i][j] = -1;
-                    }
-                }
-            }
-            if(cnt >= 1)
-                return false;
-            cnt = 0;
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    if(mat[i][j] == -1){
-                        mat[i][j]= 0;
-                        if(checkO()){
-                            cnt++;
-                        }
-                        mat[i][j] = -1;
-                    }
-                }
-            }
-            if(cnt >= 1)
-                return false;
-            return true;
-        }
-        return false;
-    }
-    public Boolean checkX() {
-        Boolean flag = false;
-        for(int i = 0; i < N; i++) {
-            for (int j = 0; j < N-1; j++) {
-                if(mat[i][j] != 1 || mat[i][j] != mat[i][j+1]){
-                    flag = false;
-                    break;
-                }
-                else
-                    flag = true;
-            }
-            if(flag)
-                return true;
-        }
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N-1; j++) {
-                if (mat[j][i] != 1 || mat[j][i] != mat[j+1][i]){
-                    flag = false;
-                    break;
-                }
-                else
-                    flag = true;
-            }
-            if(flag)
-                return true;
-        }
-        flag = true;
-        for (int i=0; i<N-1; i++) {
-            if (mat[i][i] != mat[i+1][i+1] || mat[i][i] != 1) {
-                flag = false;
-                break;
-            }
-        }
-        if(flag)
-            return true;
-        flag = true;
-        for (int i = N-1; i > 0; i--) {
-            int j = 0;
-            if(mat[j][i] != mat[j+1][i-1] || mat[j][i] != 1) {
-                flag = false;
-                break;
-            }
-            else
-                j++;
-        }
-        if(flag)
+        if(count == 9)
             return true;
         return false;
     }
-    public Boolean checkO() {
-        Boolean flag = false;
+    public Boolean check(int mat[][]) {
+        Boolean flag = true;
+        int count = 0;
         for(int i = 0; i < N; i++) {
-            for (int j = 0; j < N-1; j++) {
-                if(mat[i][j] != mat[i][j+1] || mat[i][j] != 0){
+            for (int j = 0; j < N; j++) {
+                if(mat[i][j] != 1){
+                    count += mat[i][j];
+                }
+                else{
                     flag = false;
                     break;
                 }
-                else
-                    flag = true;
             }
-            if(flag)
+            if(count == 15 && flag) 
                 return true;
         }
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N-1; j++) {
-                if (mat[j][i] != mat[j+1][i] || mat[j][i] != 0){
-                    flag = false;
-                    break;
-                }
-                else
-                    flag = true;
-            }
-            if(flag)
-                return true;
-        }
+        count = 0;
         flag = true;
-        for (int i=0; i<N-1; i++) {
-            if (mat[i][i] != mat[i+1][i+1] || mat[i][i] != 0) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (mat[j][i] != 1){
+                    count += mat[j][i];    
+                }
+                else {
+                    flag = false;
+                    break;
+                }
+            }
+            if(count == 15 && flag)
+                return true;
+        }
+        count = 0;
+        flag = true;
+        for (int i = 0; i < N; i++) {
+            if (mat[i][i] != 1) {
+                count += mat[i][i];
+            }
+            else{
                 flag = false;
                 break;
             }
         }
-        if(flag)
+        if(count == 15 && flag)
             return true;
+        count = 0;
         flag = true;
         for (int i = N-1; i > 0; i--) {
             int j = 0;
-            if(mat[j][i] != mat[j+1][i-1] || mat[j][i] != 0) {
+            if(mat[j][i] != 1) {
+                count += mat[j][i];
+                j++;
+            }
+            else {
                 flag = false;
                 break;
             }
-            else
-                j++;
         }
-        if(flag)
+        if(count == 15 && flag)
             return true;
         return false;
     }
@@ -191,10 +126,8 @@ public class TicTacToe {
         System.out.print("\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if(mat[i][j] == 0)
-                    System.out.print("O");
-                else if(mat[i][j] == 1)
-                    System.out.print("x");
+                if(mat[i][j] != -1)
+                    System.out.print(mat[i][j]);
                 else
                     System.out.print(" ");
                 if(j!=N-1)
@@ -206,20 +139,20 @@ public class TicTacToe {
                 System.out.print("\n");
         }
     }
-    public Boolean AddMove(int x,int y,int value) throws Exception{
-        if(mat[x-1][y-1] != -1 || x < 0 || y < 0 || x > N || y > N)
+    public Boolean AddMove(int x,int y,int value,int count) throws Exception{
+        if(mat[x][y] != -1 || x < 0 || y < 0 || x >= N || y >= N || value > 9 || value < 1)
             return false;
         final BufferedWriter writer = new BufferedWriter(new FileWriter("output_main.txt", true));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  
         LocalDateTime now = LocalDateTime.now();
         writer.newLine();
-        if(value == 1)
-            writer.write("X moves "+x+","+y+" at "+dtf.format(now));
-        if(value == 0)
-            writer.write("O moves "+x+","+y+" at "+dtf.format(now));
+        if(count%2 == 0)
+            writer.write("Player1 moves "+x+","+y+" at "+dtf.format(now));
+        if(count%2 != 0)
+            writer.write("Player2 moves "+x+","+y+" at "+dtf.format(now));
         writer.newLine();
         writer.close();
-        mat[x-1][y-1] = value;
+        mat[x][y] = value;
         return true;
     }
     public static void main(String[] args) throws Exception{
@@ -230,23 +163,25 @@ public class TicTacToe {
         Scanner sc = new Scanner(System.in);
         int count = 0;
         do {
-            int x,y;
+            int x, y, value;
             while(count%2 == 0) {
-                System.out.println("Move for X");
-                System.out.println("Enter the coordinates wherem you want to enter:");
+                System.out.println("Move for Player1");
+                System.out.println("Enter the coordinates where you want to enter:");
                 x = sc.nextInt();
                 y = sc.nextInt();
-                if(tt.AddMove(x, y, 1)){
+                System.out.println("Enter the number between 1-9:");
+                value = sc.nextInt();
+                if(tt.AddMove(x, y, value,count)){
                     ++count;
-                    if(tt.checkDraw(count)){
-                        tt.draw();
-                        System.out.println("Match is Draw");
+                    if(tt.check(tt.mat)){
+                        tt.swingwins(1);
+                        System.out.println("Player1 wins.");
                         flag = 0;
                         break;
                     }
-                    else if(tt.checkX()){
-                        tt.swingwins(1);
-                        System.out.println("X wins.");
+                    else if(tt.checkDraw(count)){
+                        tt.draw();
+                        System.out.println("Match is Draw");
                         flag = 0;
                         break;
                     }
@@ -259,21 +194,23 @@ public class TicTacToe {
             if(flag == 0)
                 break;
             while(count%2 != 0) {
-                System.out.println("Move for O");
-                System.out.println("Enter the coordinates wherem you want to enter:");
+                System.out.println("Move for Player2");
+                System.out.println("Enter the coordinates where you want to enter:");
                 x = sc.nextInt();
                 y = sc.nextInt();
-                if(tt.AddMove(x, y, 0)) {
+                System.out.println("Enter the number between 1-9:");
+                value = sc.nextInt();
+                if(tt.AddMove(x, y, value,count)) {
                     ++count;
-                    if(tt.checkDraw(count)) {
-                        tt.draw();
-                        System.out.println("Match is Draw.");
+                    if(tt.check(tt.mat)){
+                        tt.swingwins(0);
+                        System.out.println("Player2 wins.");
                         flag = 0;
                         break;
                     }
-                    else if(tt.checkO()){
-                        tt.swingwins(0);
-                        System.out.println("O wins.");
+                    else if(tt.checkDraw(count)) {
+                        tt.draw();
+                        System.out.println("Match is Draw.");
                         flag = 0;
                         break;
                     }
